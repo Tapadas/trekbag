@@ -1,33 +1,37 @@
-import { useState } from "react";
-import { initialItems } from "../constants";
+import EmptyView from "./EmptyView";
 
-export default function ItemList({ items, setItems }) {
-  const handleDelete = (id) => {
-    const newItems = items.filter((item) => item.id !== id);
-    setItems(newItems);
-  };
-
+export default function ItemList({
+  items,
+  handleDeleteItem,
+  handleToggleItem,
+}) {
   return (
-    <ul>
+    <ul className="item-list">
+      {items.length === 0 && <EmptyView />}
       {items.map((item) => (
         <Item
           key={item.id}
           item={item}
-          onRemove={() => handleDelete(item.id)}
+          onDeleteItem={handleDeleteItem}
+          onToggleItem={handleToggleItem}
         />
       ))}
     </ul>
   );
 }
 
-function Item({ item, onRemove }) {
+function Item({ item, onDeleteItem, onToggleItem }) {
   return (
     <li className="item">
       <label>
-        <input type="checkbox" defaultChecked={item.packed} />
+        <input
+          type="checkbox"
+          checked={item.packed}
+          onClick={() => onToggleItem(item.id)}
+        />
         {item.name}
       </label>
-      <button className="remove" onClick={onRemove}>
+      <button className="remove" onClick={() => onDeleteItem(item.id)}>
         X
       </button>
     </li>
